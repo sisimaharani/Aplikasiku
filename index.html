@@ -12,15 +12,14 @@
             height: 100vh;
             background-color: black;
             font-family: Arial, sans-serif;
+            margin: 0;
         }
         .calculator {
-            width: 300px;
+            width: 320px;
+            background-color: #1c1c1c;
             border-radius: 20px;
             padding: 20px;
-            background-color: #1c1c1c;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
         .display {
             width: 100%;
@@ -28,9 +27,10 @@
             background-color: black;
             color: white;
             text-align: right;
-            font-size: 2em;
+            font-size: 2.5em;
             padding: 10px;
             border-radius: 10px;
+            overflow: hidden;
         }
         .buttons {
             display: grid;
@@ -39,9 +39,9 @@
             margin-top: 20px;
         }
         button {
-            width: 60px;
+            width: 100%;
             height: 60px;
-            border-radius: 50%;
+            border-radius: 30px;
             border: none;
             font-size: 1.5em;
             cursor: pointer;
@@ -56,8 +56,7 @@
         }
         .zero {
             grid-column: span 2;
-            width: 130px;
-            border-radius: 30px;
+            width: 100%;
         }
     </style>
 </head>
@@ -98,7 +97,7 @@
         let firstValue = null;
 
         function appendNumber(number) {
-            if (display.innerText === "0") {
+            if (display.innerText === "0" || currentInput === "0") {
                 display.innerText = number;
             } else {
                 display.innerText += number;
@@ -109,6 +108,7 @@
         function appendDecimal() {
             if (!display.innerText.includes(".")) {
                 display.innerText += ".";
+                currentInput = display.innerText;
             }
         }
 
@@ -121,16 +121,19 @@
 
         function toggleSign() {
             display.innerText = parseFloat(display.innerText) * -1;
+            currentInput = display.innerText;
         }
 
         function percent() {
             display.innerText = parseFloat(display.innerText) / 100;
+            currentInput = display.innerText;
         }
 
         function setOperator(op) {
             firstValue = parseFloat(display.innerText);
             operator = op;
-            display.innerText = "";
+            display.innerText = "0";
+            currentInput = "";
         }
 
         function calculate() {
@@ -141,11 +144,12 @@
                     case '+': result = firstValue + secondValue; break;
                     case '-': result = firstValue - secondValue; break;
                     case '*': result = firstValue * secondValue; break;
-                    case '/': result = firstValue / secondValue; break;
+                    case '/': result = secondValue !== 0 ? firstValue / secondValue : 'Error'; break;
                 }
                 display.innerText = result;
                 firstValue = null;
                 operator = null;
+                currentInput = result;
             }
         }
     </script>
