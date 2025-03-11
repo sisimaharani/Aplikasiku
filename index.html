@@ -1,25 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Kalkulator iPhone</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            font-family: Arial, sans-serif;
+        }
+        .calculator {
+            width: 300px;
+            border-radius: 20px;
+            padding: 20px;
+            background-color: #1c1c1c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .display {
+            width: 100%;
+            height: 80px;
+            background-color: black;
+            color: white;
+            text-align: right;
+            font-size: 2em;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .operator {
+            background-color: orange;
+            color: white;
+        }
+        .number {
+            background-color: #505050;
+            color: white;
+        }
+        .zero {
+            grid-column: span 2;
+            width: 130px;
+            border-radius: 30px;
+        }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form>
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="number" onclick="clearDisplay()">AC</button>
+            <button class="number" onclick="toggleSign()">±</button>
+            <button class="number" onclick="percent()">%</button>
+            <button class="operator" onclick="setOperator('/')">÷</button>
+            
+            <button class="number" onclick="appendNumber(7)">7</button>
+            <button class="number" onclick="appendNumber(8)">8</button>
+            <button class="number" onclick="appendNumber(9)">9</button>
+            <button class="operator" onclick="setOperator('*')">×</button>
+            
+            <button class="number" onclick="appendNumber(4)">4</button>
+            <button class="number" onclick="appendNumber(5)">5</button>
+            <button class="number" onclick="appendNumber(6)">6</button>
+            <button class="operator" onclick="setOperator('-')">−</button>
+            
+            <button class="number" onclick="appendNumber(1)">1</button>
+            <button class="number" onclick="appendNumber(2)">2</button>
+            <button class="number" onclick="appendNumber(3)">3</button>
+            <button class="operator" onclick="setOperator('+')">+</button>
+            
+            <button class="number zero" onclick="appendNumber(0)">0</button>
+            <button class="number" onclick="appendDecimal()">.</button>
+            <button class="operator" onclick="calculate()">=</button>
+        </div>
     </div>
+
+    <script>
+        let display = document.getElementById("display");
+        let currentInput = "";
+        let operator = null;
+        let firstValue = null;
+
+        function appendNumber(number) {
+            if (display.innerText === "0") {
+                display.innerText = number;
+            } else {
+                display.innerText += number;
+            }
+            currentInput = display.innerText;
+        }
+
+        function appendDecimal() {
+            if (!display.innerText.includes(".")) {
+                display.innerText += ".";
+            }
+        }
+
+        function clearDisplay() {
+            display.innerText = "0";
+            currentInput = "";
+            operator = null;
+            firstValue = null;
+        }
+
+        function toggleSign() {
+            display.innerText = parseFloat(display.innerText) * -1;
+        }
+
+        function percent() {
+            display.innerText = parseFloat(display.innerText) / 100;
+        }
+
+        function setOperator(op) {
+            firstValue = parseFloat(display.innerText);
+            operator = op;
+            display.innerText = "";
+        }
+
+        function calculate() {
+            if (operator && firstValue !== null) {
+                let secondValue = parseFloat(display.innerText);
+                let result;
+                switch (operator) {
+                    case '+': result = firstValue + secondValue; break;
+                    case '-': result = firstValue - secondValue; break;
+                    case '*': result = firstValue * secondValue; break;
+                    case '/': result = firstValue / secondValue; break;
+                }
+                display.innerText = result;
+                firstValue = null;
+                operator = null;
+            }
+        }
+    </script>
 </body>
 </html>
